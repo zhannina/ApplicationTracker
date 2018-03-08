@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.aware.Applications;
 import com.aware.Aware;
@@ -27,6 +28,7 @@ public class TestService extends Service {
     @Override
     public void onCreate(){
         super.onCreate();
+//        if(Methods.isAccessibilityEnabled(getApplicationContext())
     }
 
     @Override
@@ -38,7 +40,6 @@ public class TestService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         Intent aware = new Intent(this, Aware.class);
         startService(aware);
 
@@ -47,7 +48,6 @@ public class TestService extends Service {
         Aware.startSensor(getApplicationContext(), Aware_Preferences.STATUS_APPLICATIONS);
 
         Log.d(TAG, "Service started");
-
         return START_STICKY;
     }
 
