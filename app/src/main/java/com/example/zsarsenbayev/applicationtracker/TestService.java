@@ -20,9 +20,6 @@ import com.aware.providers.Applications_Provider;
 public class TestService extends Service {
 
     public static final String TAG = "Zhanna";
-    public String foreground_package;
-    public ContextReceiver contextReceiver;
-    public MediaPlayer player;
 
     public TestService() {
     }
@@ -42,11 +39,6 @@ public class TestService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.d(TAG, "service started");
-        player = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI);
-        player.setLooping(true);
-        player.start();
-
         Intent aware = new Intent(this, Aware.class);
         startService(aware);
 
@@ -54,52 +46,15 @@ public class TestService extends Service {
         Aware.setSetting(getApplicationContext(), Aware_Preferences.FREQUENCY_APPLICATIONS, 20000);
         Aware.startSensor(getApplicationContext(), Aware_Preferences.STATUS_APPLICATIONS);
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND);
-        registerReceiver(contextReceiver, filter);
+        Log.d(TAG, "Service started");
 
         return START_STICKY;
-    }
-
-    public class ContextReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND)){
-                Cursor cursorApp = context.getContentResolver().query(Applications_Provider.
-                                Applications_Foreground.CONTENT_URI, null, null, null,
-                        Applications_Provider.Applications_Foreground.TIMESTAMP + " DESC LIMIT 1");
-                Log.d(TAG, "inside first if");
-                if (cursorApp != null && cursorApp.moveToFirst()) {
-                    Log.d(TAG, "inside second if");
-                    foreground_package = cursorApp.getString(cursorApp.getColumnIndex(Applications_Provider.Applications_Foreground.PACKAGE_NAME));
-                    PackageManager cjj = getPackageManager();
-                    Intent LaunchIntent = cjj.getLaunchIntentForPackage(foreground_package);
-                    if (foreground_package.equals("com.example.zsarsenbayev.applicationtracker")) return;
-                    else if (LaunchIntent == null) return;
-                    else {
-                        Log.d(TAG, "inside else");
-                        Log.d(TAG, foreground_package);
-                    }
-                }
-                if (cursorApp != null && !cursorApp.isClosed()){
-                    cursorApp.close();
-                }
-            }
-        }
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-
         Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, false);
-        if(contextReceiver != null) {
-            unregisterReceiver(contextReceiver);
-        }
-
         super.onDestroy();
-//        kill the service
-        player.stop();
     }
 }
