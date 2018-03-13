@@ -34,11 +34,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         serviceBtn = findViewById(R.id.serviceBtn);
 
-        Log.d(TAG, "" + Methods.isAccessibilityServiceEnabled(getApplicationContext(), Aware.class));
-
-        if (!Methods.isAccessibilityServiceEnabled(getApplicationContext(), Aware.class)){
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-        }
+//        Log.d(TAG, "" + Methods.isAccessibilityServiceEnabled(getApplicationContext(), Aware.class));
+//
+//        if (!Methods.isAccessibilityServiceEnabled(getApplicationContext(), Aware.class)){
+//            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+//        }
 
         serviceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, TestService.class);
         Log.d(TAG, TestService.class.getName());
         startService(serviceIntent);
-//        Methods.logInstalledAccessiblityServices(getApplicationContext());
     }
 
 
