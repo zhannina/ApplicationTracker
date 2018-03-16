@@ -1,5 +1,6 @@
 package com.example.zsarsenbayev.applicationtracker;
 
+import android.*;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "Zhanna";
     public static String message = "Please enable accessibility";
     private static final int REQUEST_CAMERA_PERMISSION = 100;
+    public final static int REQUEST_CODE = 200;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkDrawOverlayPermission();
         checkPermissions();
         if (android.os.Build.VERSION.SDK_INT > 9){
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -74,4 +78,29 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void checkDrawOverlayPermission() {
+        /** check if we already  have permission to draw over other apps */
+        if (!Settings.canDrawOverlays(this)) {
+            /** if not construct intent to request permission */
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            /** request permission via start activity for result */
+            startActivityForResult(intent, REQUEST_CODE);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
+        /** check if received result code
+         is equal our requested code for draw permission  */
+        if (requestCode == REQUEST_CODE) {
+            /** if so check once again if we have permission */
+            if (Settings.canDrawOverlays(this)) {
+                // continue here - permission was granted
+            }
+        }
+    }
 }
