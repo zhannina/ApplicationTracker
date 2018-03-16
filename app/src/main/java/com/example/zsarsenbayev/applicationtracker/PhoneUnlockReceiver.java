@@ -20,9 +20,13 @@ public class PhoneUnlockReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//        if (intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_UNLOCKED)){
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Phone unlocked");
-//        }
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Phone unlocked");
+        startAffectivaService(context);
+    }
+
+    private void startAffectivaService(Context context) {
+        Intent serviceIntent = new Intent(context, AffectivaService.class);
+        context.startService(serviceIntent);
     }
 }

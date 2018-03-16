@@ -9,6 +9,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
+import android.os.StrictMode;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,25 +30,36 @@ public class MainActivity extends AppCompatActivity {
     private Button serviceBtn;
     public static final String TAG = "Zhanna";
     public static String message = "Please enable accessibility";
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        checkPermissions();
+        if (android.os.Build.VERSION.SDK_INT > 9){
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
         serviceBtn = findViewById(R.id.serviceBtn);
-
-//        Log.d(TAG, "" + Methods.isAccessibilityServiceEnabled(getApplicationContext(), Aware.class));
-//
-//        if (!Methods.isAccessibilityServiceEnabled(getApplicationContext(), Aware.class)){
-//            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-//        }
-
         serviceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startTestService();
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void checkPermissions() {
+        if (checkSelfPermission(android.Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.CAMERA},
+                    REQUEST_CAMERA_PERMISSION);
+        }
     }
 
     private void startTestService() {

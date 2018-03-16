@@ -97,8 +97,7 @@ public class TestService extends Service {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, false);
-        super.onDestroy();
+//        Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, false);
         unregisterReceiver(phoneUnlockReceiver);
     }
 }

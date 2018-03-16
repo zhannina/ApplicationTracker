@@ -27,6 +27,9 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        maven {
+            url "http://maven.affectiva.com"
+        }
     }
 }
 
@@ -50,6 +53,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.android.gms:play-services:10.2.6'
     compile 'com.android.support:cardview-v7:27.+'
+    compile 'com.affectiva.android:affdexsdk:3.2'
     testCompile 'junit:junit:4.12'
 
     api "com.github.denzilferreira:aware-client:$aware_libs"
