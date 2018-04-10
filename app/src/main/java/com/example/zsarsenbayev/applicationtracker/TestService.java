@@ -89,15 +89,17 @@ public class TestService extends Service {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Screen.ACTION_AWARE_SCREEN_UNLOCKED);
+    //    filter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND);
         registerReceiver(phoneUnlockReceiver, filter);
-
         return START_STICKY;
     }
 
     @Override
     public void onDestroy(){
+        if (phoneUnlockReceiver != null) {
+            unregisterReceiver(phoneUnlockReceiver);
+        }
         super.onDestroy();
 //        Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, false);
-        unregisterReceiver(phoneUnlockReceiver);
     }
 }

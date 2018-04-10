@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 project.ext {
-    aware_libs = (System.getenv("aware_libs") as String ?: "development-SNAPSHOT")
+    aware_libs = (System.getenv("aware_libs") as String ?: "master-SNAPSHOT")
 }
 
 buildscript {

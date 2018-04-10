@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.StrictMode;
 import android.support.annotation.RequiresApi;
@@ -86,7 +87,13 @@ public class AffectivaService extends Service implements Detector.ImageListener,
     }
 
     public int onStartCommand(Intent intent, int flags, int startId){
-        startDetector();
+//        final Handler handler = new Handler();
+ //       handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+                startDetector();
+//            }
+//        }, 5000);
         return START_STICKY;
     }
 
@@ -144,6 +151,7 @@ public class AffectivaService extends Service implements Detector.ImageListener,
     }
 
     void startDetector() {
+
         if (!detector.isRunning()) {
             detector.start();
         }

@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startTestService() {
         Intent serviceIntent = new Intent(this, TestService.class);
+        Log.d(TAG,serviceIntent+"");
         Log.d(TAG, TestService.class.getName());
         startService(serviceIntent);
     }
