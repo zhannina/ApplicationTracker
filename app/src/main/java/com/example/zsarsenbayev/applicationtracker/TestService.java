@@ -17,9 +17,15 @@ import android.widget.Toast;
 import com.aware.Applications;
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
+import com.aware.ESM;
 import com.aware.Screen;
 import com.aware.providers.Applications_Provider;
+import com.aware.ui.esms.ESMFactory;
+import com.aware.ui.esms.ESM_Radio;
 import com.aware.utils.Aware_Sensor;
+import com.aware.utils.Scheduler;
+
+import org.json.JSONException;
 
 public class TestService extends Service {
 
@@ -49,7 +55,7 @@ public class TestService extends Service {
         startService(aware);
 
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_SCREEN, true);
-
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ESM, true);
         Aware.startScreen(getApplicationContext());
         Applications.isAccessibilityServiceActive(getApplicationContext());// to start applications sensor
         Applications.setSensorObserver(new Applications.AWARESensorObserver() {
@@ -87,6 +93,11 @@ public class TestService extends Service {
         Log.d(TAG, "" + Applications.isAccessibilityServiceActive(getApplicationContext()));
         Log.d(TAG, "" + Applications.getSensorObserver());
 
+        EmotionESM esm = new EmotionESM(getApplicationContext());
+        esm.launchEmotionESM();
+//        esm.launchESM();
+        esm.launchESM2();
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(Screen.ACTION_AWARE_SCREEN_UNLOCKED);
         filter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND);
@@ -102,4 +113,128 @@ public class TestService extends Service {
         super.onDestroy();
 //        Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, false);
     }
+
+
+
+    public class EmotionESM {
+        private Context context;
+
+        public  EmotionESM(Context context) {
+            this.context = context;
+        }
+
+        private void launchEmotionESM(){
+            try {
+                ESMFactory factory = new ESMFactory();
+
+                //define ESM question
+                ESM_Radio esmRadio = new ESM_Radio();
+                esmRadio.addRadio("Sad")
+                        .addRadio("Suprised")
+                        .addRadio("Contempt")
+                        .addRadio("Disgusted")
+                        .addRadio("Fearful")
+                        .addRadio("Joyful")
+                        .setTitle("How are you feeling right now?")
+                        .setInstructions("Please select one option")
+                        .setSubmitButton("OK");
+
+                //add them to the factory
+                factory.addESM(esmRadio);
+
+                Scheduler.Schedule scheduler = new Scheduler.Schedule("testRandom");
+                scheduler.random(6, 50);
+
+                scheduler.setActionType(Scheduler.ACTION_TYPE_BROADCAST)
+                        .setActionIntentAction(ESM.ACTION_AWARE_QUEUE_ESM)
+                        .addActionExtra(ESM.EXTRA_ESM, factory.build());
+
+                Scheduler.saveSchedule(context, scheduler);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        private void launchESM(){
+            try {
+                ESMFactory factory = new ESMFactory();
+
+                //define ESM question
+                ESM_Radio esmRadio = new ESM_Radio();
+                esmRadio.addRadio("Sad")
+                        .addRadio("Suprised")
+                        .addRadio("Contempt")
+                        .addRadio("Disgusted")
+                        .addRadio("Fearful")
+                        .addRadio("Joyful")
+                        .setTitle("How are you feeling right now?")
+                        .setInstructions("Please select one option")
+                        .setSubmitButton("OK");
+
+                //add them to the factory
+                factory.addESM(esmRadio);
+
+                ESM.queueESM(context, factory.build());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        private void launchESM2(){
+            try {
+                ESMFactory factory = new ESMFactory();
+
+                //define ESM question
+                ESM_Radio esmRadio = new ESM_Radio();
+                esmRadio.addRadio("Sad")
+                        .addRadio("Suprised")
+                        .addRadio("Contempt")
+                        .addRadio("Disgusted")
+                        .addRadio("Fearful")
+                        .addRadio("Joyful")
+                        .setTitle("How are you feeling right now?")
+                        .setInstructions("Please select one option")
+                        .setSubmitButton("OK");
+
+                //add them to the factory
+                factory.addESM(esmRadio);
+
+                Intent queue = new Intent(ESM.ACTION_AWARE_QUEUE_ESM);
+                queue.putExtra(ESM.EXTRA_ESM, factory.build());
+                context.sendBroadcast(queue);
+
+                /// What happens when user interacts with ESM
+                IntentFilter filter = new IntentFilter();
+                filter.addAction(ESM.ACTION_AWARE_ESM_ANSWERED); // USER ANSWERS THE ESM
+                filter.addAction(ESM.ACTION_AWARE_ESM_DISMISSED);// User dismisses the ESM
+
+                context.registerReceiver(new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        if (intent.getAction() == ESM.ACTION_AWARE_ESM_ANSWERED) {
+                            // TAKE ACTION
+                                try {
+                                    Log.d(TAG, ""+intent.getStringExtra(ESM.EXTRA_ANSWER));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                        }
+                        if (intent.getAction() == ESM.ACTION_AWARE_ESM_DISMISSED) {
+                            Log.d("A", ""+ "ESM dismissed");
+                        }
+                    }
+                }, filter);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
 }
