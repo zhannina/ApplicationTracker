@@ -87,13 +87,9 @@ public class AffectivaService extends Service implements Detector.ImageListener,
     }
 
     public int onStartCommand(Intent intent, int flags, int startId){
-//        final Handler handler = new Handler();
- //       handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
+
                 startDetector();
-//            }
-//        }, 5000);
+
         return START_STICKY;
     }
 

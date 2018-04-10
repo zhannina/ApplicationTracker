@@ -3,6 +3,8 @@ package com.example.zsarsenbayev.applicationtracker;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,14 +21,38 @@ public class PhoneUnlockReceiver extends BroadcastReceiver {
     public static final String TAG = "Receiver";
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Phone unlocked");
-        startAffectivaService(context);
+
+        new CountDownTimer(10000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                startAffectivaService(context);
+            }
+
+            public void onFinish() {
+                stopAffectivaService(context);
+            }
+        }.start();
     }
 
     private void startAffectivaService(Context context) {
         Intent serviceIntent = new Intent(context, AffectivaService.class);
         context.startService(serviceIntent);
     }
+
+    private void stopAffectivaService(Context context){
+        Intent intent = new Intent(context, AffectivaService.class);
+        context.stopService(intent);
+
+    }
+
+//    final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//        @Override
+//        public void run() {
+//            Log.d(TAG, "Phone unlocked");
+//            startAffectivaService(context);
+//        }
+//    }, 5000);
 }
