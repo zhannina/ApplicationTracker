@@ -96,7 +96,7 @@ public class TestService extends Service {
         EmotionESM esm = new EmotionESM(getApplicationContext());
         esm.launchEmotionESM();
 //        esm.launchESM();
-        esm.launchESM2();
+//        esm.launchESM2();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Screen.ACTION_AWARE_SCREEN_UNLOCKED);
@@ -157,84 +157,84 @@ public class TestService extends Service {
 
         }
 
-        private void launchESM(){
-            try {
-                ESMFactory factory = new ESMFactory();
+//        private void launchESM(){
+//            try {
+//                ESMFactory factory = new ESMFactory();
+//
+//                //define ESM question
+//                ESM_Radio esmRadio = new ESM_Radio();
+//                esmRadio.addRadio("Sad")
+//                        .addRadio("Suprised")
+//                        .addRadio("Contempt")
+//                        .addRadio("Disgusted")
+//                        .addRadio("Fearful")
+//                        .addRadio("Joyful")
+//                        .setTitle("How are you feeling right now?")
+//                        .setInstructions("Please select one option")
+//                        .setSubmitButton("OK");
+//
+//                //add them to the factory
+//                factory.addESM(esmRadio);
+//
+//                ESM.queueESM(context, factory.build());
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
 
-                //define ESM question
-                ESM_Radio esmRadio = new ESM_Radio();
-                esmRadio.addRadio("Sad")
-                        .addRadio("Suprised")
-                        .addRadio("Contempt")
-                        .addRadio("Disgusted")
-                        .addRadio("Fearful")
-                        .addRadio("Joyful")
-                        .setTitle("How are you feeling right now?")
-                        .setInstructions("Please select one option")
-                        .setSubmitButton("OK");
-
-                //add them to the factory
-                factory.addESM(esmRadio);
-
-                ESM.queueESM(context, factory.build());
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        private void launchESM2(){
-            try {
-                ESMFactory factory = new ESMFactory();
-
-                //define ESM question
-                ESM_Radio esmRadio = new ESM_Radio();
-                esmRadio.addRadio("Sad")
-                        .addRadio("Suprised")
-                        .addRadio("Contempt")
-                        .addRadio("Disgusted")
-                        .addRadio("Fearful")
-                        .addRadio("Joyful")
-                        .setTitle("How are you feeling right now?")
-                        .setInstructions("Please select one option")
-                        .setSubmitButton("OK");
-
-                //add them to the factory
-                factory.addESM(esmRadio);
-
-                Intent queue = new Intent(ESM.ACTION_AWARE_QUEUE_ESM);
-                queue.putExtra(ESM.EXTRA_ESM, factory.build());
-                context.sendBroadcast(queue);
-
-                /// What happens when user interacts with ESM
-                IntentFilter filter = new IntentFilter();
-                filter.addAction(ESM.ACTION_AWARE_ESM_ANSWERED); // USER ANSWERS THE ESM
-                filter.addAction(ESM.ACTION_AWARE_ESM_DISMISSED);// User dismisses the ESM
-
-                context.registerReceiver(new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        if (intent.getAction() == ESM.ACTION_AWARE_ESM_ANSWERED) {
-                            // TAKE ACTION
-                                try {
-                                    Log.d(TAG, ""+intent.getStringExtra(ESM.EXTRA_ANSWER));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                        }
-                        if (intent.getAction() == ESM.ACTION_AWARE_ESM_DISMISSED) {
-                            Log.d("A", ""+ "ESM dismissed");
-                        }
-                    }
-                }, filter);
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
+//        private void launchESM2(){
+//            try {
+//                ESMFactory factory = new ESMFactory();
+//
+//                //define ESM question
+//                ESM_Radio esmRadio = new ESM_Radio();
+//                esmRadio.addRadio("Sad")
+//                        .addRadio("Suprised")
+//                        .addRadio("Contempt")
+//                        .addRadio("Disgusted")
+//                        .addRadio("Fearful")
+//                        .addRadio("Joyful")
+//                        .setTitle("How are you feeling right now?")
+//                        .setInstructions("Please select one option")
+//                        .setSubmitButton("OK");
+//
+//                //add them to the factory
+//                factory.addESM(esmRadio);
+//
+//                Intent queue = new Intent(ESM.ACTION_AWARE_QUEUE_ESM);
+//                queue.putExtra(ESM.EXTRA_ESM, factory.build());
+//                context.sendBroadcast(queue);
+//
+//                /// What happens when user interacts with ESM
+//                IntentFilter filter = new IntentFilter();
+//                filter.addAction(ESM.ACTION_AWARE_ESM_ANSWERED); // USER ANSWERS THE ESM
+//                filter.addAction(ESM.ACTION_AWARE_ESM_DISMISSED);// User dismisses the ESM
+//
+//                context.registerReceiver(new BroadcastReceiver() {
+//                    @Override
+//                    public void onReceive(Context context, Intent intent) {
+//                        if (intent.getAction() == ESM.ACTION_AWARE_ESM_ANSWERED) {
+//                            // TAKE ACTION
+//                                try {
+//                                    Log.d(TAG, ""+intent.getStringExtra(ESM.EXTRA_ANSWER));
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                        }
+//                        if (intent.getAction() == ESM.ACTION_AWARE_ESM_DISMISSED) {
+//                            Log.d("A", ""+ "ESM dismissed");
+//                        }
+//                    }
+//                }, filter);
+//
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
     }
 
 }
