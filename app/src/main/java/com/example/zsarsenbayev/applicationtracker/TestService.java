@@ -56,6 +56,7 @@ public class TestService extends Service {
 
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_SCREEN, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ESM, true);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_APPLICATIONS, true);
         Aware.startScreen(getApplicationContext());
         Applications.isAccessibilityServiceActive(getApplicationContext());// to start applications sensor
         Applications.setSensorObserver(new Applications.AWARESensorObserver() {
