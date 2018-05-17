@@ -21,6 +21,7 @@ import com.aware.ESM;
 import com.aware.Screen;
 import com.aware.providers.Applications_Provider;
 import com.aware.ui.esms.ESMFactory;
+import com.aware.ui.esms.ESM_Likert;
 import com.aware.ui.esms.ESM_Radio;
 import com.aware.utils.Aware_Sensor;
 import com.aware.utils.Scheduler;
@@ -62,7 +63,9 @@ public class TestService extends Service {
         Applications.setSensorObserver(new Applications.AWARESensorObserver() {
             @Override
             public void onForeground(ContentValues data) {
-                Log.d(TAG, data.toString());
+                Log.d("AAAAAAAAAAA", data.toString());
+//                Log.d("AAAAAAAAAAA", data.get("DEVICE_ID").toString());
+
             }
 
             @Override
@@ -95,8 +98,8 @@ public class TestService extends Service {
         Log.d(TAG, "" + Applications.getSensorObserver());
 
         EmotionESM esm = new EmotionESM(getApplicationContext());
-        esm.launchEmotionESM();
-//        esm.launchESM();
+//        esm.launchEmotionESM();
+        esm.launchESM();
 //        esm.launchESM2();
 
         IntentFilter filter = new IntentFilter();
@@ -130,19 +133,30 @@ public class TestService extends Service {
                 ESMFactory factory = new ESMFactory();
 
                 //define ESM question
-                ESM_Radio esmRadio = new ESM_Radio();
-                esmRadio.addRadio("Sad")
-                        .addRadio("Suprised")
-                        .addRadio("Contempt")
-                        .addRadio("Disgusted")
-                        .addRadio("Fearful")
-                        .addRadio("Joyful")
-                        .setTitle("How are you feeling right now?")
-                        .setInstructions("Please select one option")
+                ESM_Likert esmLikert1 = new ESM_Likert();
+                esmLikert1.setLikertMax(5)
+                        .setLikertMaxLabel("Miserable")
+                        .setLikertMinLabel("Pleased")
+                        .setLikertStep(1)
+                        .setTitle("I currently feel")
+                        .setInstructions("")
                         .setSubmitButton("OK");
 
                 //add them to the factory
-                factory.addESM(esmRadio);
+                factory.addESM(esmLikert1);
+
+                ESM_Likert esmLikert2 = new ESM_Likert();
+                esmLikert2.setLikertMax(5)
+                        .setLikertMaxLabel("Sleepy")
+                        .setLikertMinLabel("Aroused")
+                        .setLikertStep(1)
+                        .setTitle("I currently feel")
+                        .setInstructions("")
+                        .setSubmitButton("OK");
+
+
+                //add them to the factory
+                factory.addESM(esmLikert2);
 
                 Scheduler.Schedule scheduler = new Scheduler.Schedule("testRandom");
                 scheduler.random(6, 50);
@@ -159,32 +173,43 @@ public class TestService extends Service {
 
         }
 
-//        private void launchESM(){
-//            try {
-//                ESMFactory factory = new ESMFactory();
-//
-//                //define ESM question
-//                ESM_Radio esmRadio = new ESM_Radio();
-//                esmRadio.addRadio("Sad")
-//                        .addRadio("Suprised")
-//                        .addRadio("Contempt")
-//                        .addRadio("Disgusted")
-//                        .addRadio("Fearful")
-//                        .addRadio("Joyful")
-//                        .setTitle("How are you feeling right now?")
-//                        .setInstructions("Please select one option")
-//                        .setSubmitButton("OK");
-//
-//                //add them to the factory
-//                factory.addESM(esmRadio);
-//
-//                ESM.queueESM(context, factory.build());
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
+        private void launchESM(){
+            try {
+                ESMFactory factory = new ESMFactory();
+
+        //define ESM question
+                ESM_Likert esmLikert1 = new ESM_Likert();
+                esmLikert1.setLikertMax(5)
+                        .setLikertMaxLabel("Miserable")
+                        .setLikertMinLabel("Pleased")
+                        .setLikertStep(1)
+                        .setTitle("I currently feel")
+                        .setInstructions("")
+                        .setSubmitButton("OK");
+
+        //add them to the factory
+                factory.addESM(esmLikert1);
+
+                ESM_Likert esmLikert2 = new ESM_Likert();
+                esmLikert2.setLikertMax(5)
+                        .setLikertMaxLabel("Sleepy")
+                        .setLikertMinLabel("Aroused")
+                        .setLikertStep(1)
+                        .setTitle("I currently feel")
+                        .setInstructions("")
+                        .setSubmitButton("OK");
+
+
+        //add them to the factory
+                factory.addESM(esmLikert2);
+
+                ESM.queueESM(context, factory.build());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
 
 //        private void launchESM2(){
 //            try {

@@ -23,6 +23,8 @@ import com.affectiva.android.affdex.sdk.Frame;
 import com.affectiva.android.affdex.sdk.detector.CameraDetector;
 import com.affectiva.android.affdex.sdk.detector.Detector;
 import com.affectiva.android.affdex.sdk.detector.Face;
+import com.aware.Aware;
+import com.aware.Aware_Preferences;
 
 import java.util.List;
 
@@ -38,8 +40,8 @@ public class AffectivaService extends Service implements Detector.ImageListener,
     private static final String TAG = "Zhanna";
     public static final String MyPREFS = "MyPrefs" ;
 
-    private String deviceID;
     private SharedPreferences sharedPrefs;
+    String awareDeviceId;
 
     public AffectivaService() {
     }
@@ -51,7 +53,8 @@ public class AffectivaService extends Service implements Detector.ImageListener,
         cameraPreview = new SurfaceView(this);
 
         sharedPrefs = getSharedPreferences(MyPREFS, Context.MODE_PRIVATE);
-        deviceID = sharedPrefs.getString("deviceID", "default");
+
+        awareDeviceId = Aware.getSetting(getApplicationContext(), Aware_Preferences.DEVICE_ID);
 
         int LAYOUT_FLAG;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -129,9 +132,11 @@ public class AffectivaService extends Service implements Detector.ImageListener,
             Log.d(TAG, "valence: " + face.emotions.getValence());
             Log.d(TAG, "smile: " + face.expressions.getSmile());
 
+            Log.d(TAG, "awareDeviceId: " + awareDeviceId);
+
             ContentValues rowData = new ContentValues();
             rowData.put(EmotionsProvider.EmotionsTable.TIMESTAMP, System.currentTimeMillis());
-            rowData.put(EmotionsProvider.EmotionsTable.DEVICE_ID, deviceID);
+            rowData.put(EmotionsProvider.EmotionsTable.DEVICE_ID, awareDeviceId);
             rowData.put(EmotionsProvider.EmotionsTable.ANGER, face.emotions.getAnger());
             rowData.put(EmotionsProvider.EmotionsTable.CONTEMPT, face.emotions.getContempt());
             rowData.put(EmotionsProvider.EmotionsTable.DISGUST, face.emotions.getDisgust());
