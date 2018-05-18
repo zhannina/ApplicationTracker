@@ -20,6 +20,7 @@ import com.aware.Aware_Preferences;
 import com.aware.ESM;
 import com.aware.Screen;
 import com.aware.providers.Applications_Provider;
+import com.aware.providers.Battery_Provider;
 import com.aware.ui.esms.ESMFactory;
 import com.aware.ui.esms.ESM_Likert;
 import com.aware.ui.esms.ESM_Radio;
@@ -58,6 +59,11 @@ public class TestService extends Service {
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_SCREEN, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ESM, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_APPLICATIONS, true);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_BATTERY, true);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_NOTIFICATIONS, true);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_WIFI, true);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_NETWORK_EVENTS, true);
+        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_NETWORK_TRAFFIC, true);
         Aware.startScreen(getApplicationContext());
         Applications.isAccessibilityServiceActive(getApplicationContext());// to start applications sensor
         Applications.setSensorObserver(new Applications.AWARESensorObserver() {
