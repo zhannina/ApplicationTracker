@@ -106,7 +106,6 @@ public class TestService extends Service {
         EmotionESM esm = new EmotionESM(getApplicationContext());
 //        esm.launchEmotionESM();
         esm.launchESM();
-//        esm.launchESM2();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Screen.ACTION_AWARE_SCREEN_UNLOCKED);
@@ -216,7 +215,16 @@ public class TestService extends Service {
             }
 
         }
+    }
 
+}
+
+
+
+
+
+
+// dismissed esm example
 //        private void launchESM2(){
 //            try {
 //                ESMFactory factory = new ESMFactory();
@@ -268,6 +276,3 @@ public class TestService extends Service {
 //            }
 //
 //        }
-    }
-
-}

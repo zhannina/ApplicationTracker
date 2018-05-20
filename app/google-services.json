@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "416113406023",
+    "firebase_url": "https://applicationtracker-e95cf.firebaseio.com",
+    "project_id": "applicationtracker-e95cf",
+    "storage_bucket": "applicationtracker-e95cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:416113406023:android:d117a230b8d56e33",
+        "android_client_info": {
+          "package_name": "com.example.zsarsenbayev.applicationtracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "416113406023-bridotj9l5vboj1tenok9jnvi8kqvr9o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC9rlKeIRXVIRzrDojMn-MLwIRmxORvIk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

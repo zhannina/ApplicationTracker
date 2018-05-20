@@ -73,13 +73,18 @@
         <service
             android:name=".AffectivaService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <provider
-            android:authorities="com.example.zsarsenbayev.applicationtracker.emotions"
             android:name=".EmotionsProvider"
+            android:authorities="com.example.zsarsenbayev.applicationtracker.emotions"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
+
+        <service
+            android:name=".PushToBackendlessService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

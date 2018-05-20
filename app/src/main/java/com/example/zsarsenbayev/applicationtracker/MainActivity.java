@@ -26,20 +26,24 @@ import com.aware.Aware;
 import com.aware.Aware_Preferences;
 import com.aware.providers.Applications_Provider;
 import com.aware.utils.Aware_Sensor;
+import com.backendless.Backendless;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button serviceBtn;
     public static final String TAG = "Zhanna";
-    public static String message = "Please enable accessibility";
+    public static String message = "Please enable accessibility service";
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     public final static int REQUEST_CODE = 200;
+    Intent serviceIntent;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Backendless.initApp(Const.APP_ID, Const.ANDROID_KEY, Const.VERSION);
 
         checkDrawOverlayPermission();
         checkPermissions();
@@ -55,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
                 startTestService();
             }
         });
+        serviceIntent = new Intent(this, TestService.class);
+
+//        Backendless.initApp(this, APP_ID, ANDROID_KEY, VERSION);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -77,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
+        stopService(serviceIntent);
     }
 
 
