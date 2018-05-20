@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Backendless.initApp(Const.APP_ID, Const.ANDROID_KEY, Const.VERSION);
-
         checkDrawOverlayPermission();
         checkPermissions();
         if (android.os.Build.VERSION.SDK_INT > 9){
@@ -60,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         serviceIntent = new Intent(this, TestService.class);
-
-//        Backendless.initApp(this, APP_ID, ANDROID_KEY, VERSION);
+        
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
