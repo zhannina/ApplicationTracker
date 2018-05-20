@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Backendless.initApp(Const.APP_ID, Const.ANDROID_KEY, Const.VERSION);
+//        Backendless.initApp(Const.APP_ID, Const.ANDROID_KEY, Const.VERSION);
 
         checkDrawOverlayPermission();
         checkPermissions();
