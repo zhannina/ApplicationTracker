@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         serviceIntent = new Intent(this, TestService.class);
-        
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

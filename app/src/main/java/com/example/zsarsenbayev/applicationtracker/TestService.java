@@ -107,11 +107,21 @@ public class TestService extends Service {
         esm.launchEmotionESM();
 //        esm.launchESM();
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Screen.ACTION_AWARE_SCREEN_UNLOCKED);
-        filter.addAction(Screen.ACTION_AWARE_SCREEN_LOCKED);
+        IntentFilter filterUnlock = new IntentFilter();
+        IntentFilter filterLock = new IntentFilter();
+        IntentFilter filterScreenOn = new IntentFilter();
+        IntentFilter filterScreenOff = new IntentFilter();
+        filterUnlock.addAction(Screen.ACTION_AWARE_SCREEN_UNLOCKED);
+        filterLock.addAction(Screen.ACTION_AWARE_SCREEN_LOCKED);
+        filterScreenOn.addAction(Screen.ACTION_AWARE_SCREEN_ON);
+        filterScreenOff.addAction(Screen.ACTION_AWARE_SCREEN_OFF);
+
 //        filter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND);
-        registerReceiver(phoneUnlockReceiver, filter);
+        registerReceiver(phoneUnlockReceiver, filterUnlock);
+        registerReceiver(phoneUnlockReceiver, filterLock);
+        registerReceiver(phoneUnlockReceiver, filterScreenOn);
+        registerReceiver(phoneUnlockReceiver, filterScreenOff);
+
         return START_STICKY;
     }
 

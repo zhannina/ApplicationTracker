@@ -26,7 +26,7 @@ public class PhoneUnlockReceiver extends BroadcastReceiver {
 
         if (intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_UNLOCKED)) {
             startAffectivaService(context);
-        } else if (intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_LOCKED)){
+        } else if (intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_LOCKED) || intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_OFF)){
             stopAffectivaService(context);
         }
 
