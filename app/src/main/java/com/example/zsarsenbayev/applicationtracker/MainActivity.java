@@ -61,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    public void onResume(){
+        super.onResume();
+
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void checkPermissions() {
         if (checkSelfPermission(android.Manifest.permission.CAMERA)

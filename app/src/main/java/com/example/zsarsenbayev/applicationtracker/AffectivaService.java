@@ -38,9 +38,7 @@ public class AffectivaService extends Service implements Detector.ImageListener,
     private WindowManager windowManager;
 
     private static final String TAG = "Zhanna";
-    public static final String MyPREFS = "MyPrefs" ;
 
-    private SharedPreferences sharedPrefs;
     String awareDeviceId;
 
     public AffectivaService() {
@@ -51,8 +49,6 @@ public class AffectivaService extends Service implements Detector.ImageListener,
 
         super.onCreate();
         cameraPreview = new SurfaceView(this);
-
-        sharedPrefs = getSharedPreferences(MyPREFS, Context.MODE_PRIVATE);
 
         awareDeviceId = Aware.getSetting(getApplicationContext(), Aware_Preferences.DEVICE_ID);
 
@@ -91,8 +87,7 @@ public class AffectivaService extends Service implements Detector.ImageListener,
 
     public int onStartCommand(Intent intent, int flags, int startId){
 
-                startDetector();
-
+        startDetector();
         return START_STICKY;
     }
 
@@ -152,7 +147,6 @@ public class AffectivaService extends Service implements Detector.ImageListener,
     }
 
     void startDetector() {
-
         if (!detector.isRunning()) {
             detector.start();
         }
@@ -162,6 +156,8 @@ public class AffectivaService extends Service implements Detector.ImageListener,
         if (detector.isRunning()) {
             detector.stop();
         }
+        detector.setDetectAllEmotions(false);
+        detector.setDetectSmile(false);
     }
 
     // Stop recording and remove SurfaceView

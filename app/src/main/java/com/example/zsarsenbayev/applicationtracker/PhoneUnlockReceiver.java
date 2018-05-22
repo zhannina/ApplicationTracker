@@ -22,24 +22,12 @@ public class PhoneUnlockReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-//        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-
         if (intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_UNLOCKED)) {
             startAffectivaService(context);
         } else if (intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_LOCKED) || intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_OFF)){
             stopAffectivaService(context);
         }
 
-//        new CountDownTimer(10000, 1000) {
-//
-//            public void onTick(long millisUntilFinished) {
-//                startAffectivaService(context);
-//            }
-//
-//            public void onFinish() {
-//                stopAffectivaService(context);
-//            }
-//        }.start();
     }
 
     private void startAffectivaService(Context context) {
@@ -50,15 +38,6 @@ public class PhoneUnlockReceiver extends BroadcastReceiver {
     private void stopAffectivaService(Context context){
         Intent intent = new Intent(context, AffectivaService.class);
         context.stopService(intent);
-
     }
 
-//    final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//        @Override
-//        public void run() {
-//            Log.d(TAG, "Phone unlocked");
-//            startAffectivaService(context);
-//        }
-//    }, 5000);
 }

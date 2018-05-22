@@ -70,8 +70,6 @@ public class TestService extends Service {
             @Override
             public void onForeground(ContentValues data) {
                 Log.d("AAAAAAAAAAA", data.toString());
-//                Log.d("AAAAAAAAAAA", data.get("DEVICE_ID").toString());
-
             }
 
             @Override
@@ -105,7 +103,6 @@ public class TestService extends Service {
 
         EmotionESM esm = new EmotionESM(getApplicationContext());
         esm.launchEmotionESM();
-//        esm.launchESM();
 
         IntentFilter filterUnlock = new IntentFilter();
         IntentFilter filterLock = new IntentFilter();
@@ -188,43 +185,6 @@ public class TestService extends Service {
 
         }
 
-//        private void launchESM(){
-//            try {
-//                ESMFactory factory = new ESMFactory();
-//
-//        //define ESM question
-//                ESM_Likert esmLikert1 = new ESM_Likert();
-//                esmLikert1.setLikertMax(5)
-//                        .setLikertMaxLabel("Miserable")
-//                        .setLikertMinLabel("Pleased")
-//                        .setLikertStep(1)
-//                        .setTitle("I currently feel")
-//                        .setInstructions("")
-//                        .setSubmitButton("OK");
-//
-//        //add them to the factory
-//                factory.addESM(esmLikert1);
-//
-//                ESM_Likert esmLikert2 = new ESM_Likert();
-//                esmLikert2.setLikertMax(5)
-//                        .setLikertMaxLabel("Sleepy")
-//                        .setLikertMinLabel("Aroused")
-//                        .setLikertStep(1)
-//                        .setTitle("I currently feel")
-//                        .setInstructions("")
-//                        .setSubmitButton("OK");
-//
-//
-//        //add them to the factory
-//                factory.addESM(esmLikert2);
-//
-//                ESM.queueESM(context, factory.build());
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
     }
 
 }
@@ -280,6 +240,44 @@ public class TestService extends Service {
 //                    }
 //                }, filter);
 //
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+
+//        private void launchESM(){
+//            try {
+//                ESMFactory factory = new ESMFactory();
+//
+//        //define ESM question
+//                ESM_Likert esmLikert1 = new ESM_Likert();
+//                esmLikert1.setLikertMax(5)
+//                        .setLikertMaxLabel("Miserable")
+//                        .setLikertMinLabel("Pleased")
+//                        .setLikertStep(1)
+//                        .setTitle("I currently feel")
+//                        .setInstructions("")
+//                        .setSubmitButton("OK");
+//
+//        //add them to the factory
+//                factory.addESM(esmLikert1);
+//
+//                ESM_Likert esmLikert2 = new ESM_Likert();
+//                esmLikert2.setLikertMax(5)
+//                        .setLikertMaxLabel("Sleepy")
+//                        .setLikertMinLabel("Aroused")
+//                        .setLikertStep(1)
+//                        .setTitle("I currently feel")
+//                        .setInstructions("")
+//                        .setSubmitButton("OK");
+//
+//
+//        //add them to the factory
+//                factory.addESM(esmLikert2);
+//
+//                ESM.queueESM(context, factory.build());
 //
 //            } catch (JSONException e) {
 //                e.printStackTrace();
