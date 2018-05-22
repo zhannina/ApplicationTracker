@@ -33,6 +33,8 @@ public class TestService extends Service {
 
     public static final String TAG = "APPS";
     private PhoneUnlockReceiver phoneUnlockReceiver;
+    private int pid;
+    private Intent pidIntent;
 
     public TestService() {
     }
@@ -42,6 +44,10 @@ public class TestService extends Service {
         super.onCreate();
         phoneUnlockReceiver = new PhoneUnlockReceiver();
 //        if(Methods.isAccessibilityEnabled(getApplicationContext())
+//        pid = android.os.Process.myPid();
+//        pidIntent = new Intent(TestService.this, PhoneUnlockReceiver.class);
+//        pidIntent.putExtra("PID", pid);
+
     }
 
     @Override
@@ -103,6 +109,7 @@ public class TestService extends Service {
 
         EmotionESM esm = new EmotionESM(getApplicationContext());
         esm.launchEmotionESM();
+//        esm.launchESM();
 
         IntentFilter filterUnlock = new IntentFilter();
         IntentFilter filterLock = new IntentFilter();
@@ -119,6 +126,9 @@ public class TestService extends Service {
         registerReceiver(phoneUnlockReceiver, filterScreenOn);
         registerReceiver(phoneUnlockReceiver, filterScreenOff);
 
+//        sendBroadcast(pidIntent);
+//        Log.d("PID sent ", pid+"");
+
         return START_STICKY;
     }
 
@@ -126,11 +136,13 @@ public class TestService extends Service {
     public void onDestroy(){
         if (phoneUnlockReceiver != null) {
             unregisterReceiver(phoneUnlockReceiver);
+
+
         }
         super.onDestroy();
 //        Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, false);
+        Aware.setSetting(this, Aware_Preferences.STATUS_SCREEN, false);
     }
-
 
 
     public class EmotionESM {
@@ -154,9 +166,6 @@ public class TestService extends Service {
                         .setInstructions("")
                         .setSubmitButton("OK");
 
-                //add them to the factory
-                factory.addESM(esmLikert1);
-
                 ESM_Likert esmLikert2 = new ESM_Likert();
                 esmLikert2.setLikertMax(5)
                         .setLikertMaxLabel("Sleepy")
@@ -168,10 +177,14 @@ public class TestService extends Service {
 
 
                 //add them to the factory
+                factory.addESM(esmLikert1);
                 factory.addESM(esmLikert2);
 
                 Scheduler.Schedule scheduler = new Scheduler.Schedule("testRandom");
-                scheduler.random(6, 50);
+                scheduler.addHour(10);
+                scheduler.addHour(20);
+                scheduler.random(6, 60);
+                scheduler.addContext(Screen.ACTION_AWARE_SCREEN_ON);
 
                 scheduler.setActionType(Scheduler.ACTION_TYPE_BROADCAST)
                         .setActionIntentAction(ESM.ACTION_AWARE_QUEUE_ESM)
@@ -185,7 +198,46 @@ public class TestService extends Service {
 
         }
 
+        private void launchESM(){
+            try {
+                ESMFactory factory = new ESMFactory();
+
+                //define ESM question
+                ESM_Likert esmLikert1 = new ESM_Likert();
+                esmLikert1.setLikertMax(5)
+                        .setLikertMaxLabel("Miserable")
+                        .setLikertMinLabel("Pleased")
+                        .setLikertStep(1)
+                        .setTitle("I currently feel")
+                        .setInstructions("")
+                        .setSubmitButton("OK");
+
+
+                ESM_Likert esmLikert2 = new ESM_Likert();
+                esmLikert2.setLikertMax(5)
+                        .setLikertMaxLabel("Sleepy")
+                        .setLikertMinLabel("Aroused")
+                        .setLikertStep(1)
+                        .setTitle("I currently feel")
+                        .setInstructions("")
+                        .setSubmitButton("OK");
+
+
+                //add them to the factory
+                factory.addESM(esmLikert1);
+                factory.addESM(esmLikert2);
+
+                ESM.queueESM(context, factory.build());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
+
+
 
 }
 

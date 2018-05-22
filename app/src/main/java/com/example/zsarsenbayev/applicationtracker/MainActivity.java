@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        stopService(serviceIntent);
+        //stopService(serviceIntent);
     }
 
 
