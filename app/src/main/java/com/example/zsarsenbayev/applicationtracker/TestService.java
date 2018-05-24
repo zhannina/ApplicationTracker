@@ -51,7 +51,7 @@ public class TestService extends Service {
 
     private void startTimer() {
         if (timer == null) {
-            timer = new CountDownTimer(10000, 1000) {
+            timer = new CountDownTimer(60*60*1000, 1000) {
 
                 @Override
                 public void onTick(long millisUntilFinished) {
@@ -84,7 +84,7 @@ public class TestService extends Service {
         startService(aware);
 
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_SCREEN, true);
-        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ESM, true);
+//        Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_ESM, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_APPLICATIONS, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_BATTERY, true);
         Aware.setSetting(getApplicationContext(), Aware_Preferences.STATUS_NOTIFICATIONS, true);

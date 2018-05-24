@@ -36,7 +36,7 @@ public class PhoneUnlockReceiver extends BroadcastReceiver {
                 startAffectivaService(context);
                 Log.d(TAG, "Screen unlocked");
             }
-            if (intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_LOCKED)) {
+            if (intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_LOCKED) || intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_OFF)) {
                 stopAffectivaService(context);
                 Log.d(TAG, "Screen locked");
             }

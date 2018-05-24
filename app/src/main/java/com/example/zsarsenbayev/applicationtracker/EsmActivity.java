@@ -1,6 +1,7 @@
 package com.example.zsarsenbayev.applicationtracker;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -182,6 +183,9 @@ public class EsmActivity extends AppCompatActivity {
         esmData.put(EsmProvider.EsmTable.ESM_ANSWER, collectedAnswers);
         getApplicationContext().getContentResolver().insert(EsmProvider.EsmTable.ESM_CONTENT_URI, esmData);
         // TODO: stop esm service
+
+        Intent intent = new Intent(EsmActivity.this, EsmService.class);
+        stopService(intent);
         finish();
     }
 
