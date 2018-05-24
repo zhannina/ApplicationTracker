@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
@@ -17,37 +18,57 @@ import android.widget.Toast;
 import com.aware.Applications;
 import com.aware.Aware;
 import com.aware.Aware_Preferences;
-import com.aware.ESM;
 import com.aware.Screen;
-import com.aware.providers.Applications_Provider;
-import com.aware.providers.Battery_Provider;
-import com.aware.ui.esms.ESMFactory;
-import com.aware.ui.esms.ESM_Likert;
-import com.aware.ui.esms.ESM_Radio;
-import com.aware.utils.Aware_Sensor;
-import com.aware.utils.Scheduler;
 
 import org.json.JSONException;
+
+import java.util.Calendar;
 
 public class TestService extends Service {
 
     public static final String TAG = "APPS";
     private PhoneUnlockReceiver phoneUnlockReceiver;
-    private int pid;
-    private Intent pidIntent;
+    private CountDownTimer timer = null;
+    private Calendar calendar;
 
     public TestService() {
     }
 
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
         phoneUnlockReceiver = new PhoneUnlockReceiver();
-//        if(Methods.isAccessibilityEnabled(getApplicationContext())
-//        pid = android.os.Process.myPid();
-//        pidIntent = new Intent(TestService.this, PhoneUnlockReceiver.class);
-//        pidIntent.putExtra("PID", pid);
+        calendar = Calendar.getInstance();
 
+        if (calendar.get(Calendar.HOUR_OF_DAY) < 10 || calendar.get(Calendar.HOUR_OF_DAY) > 20){
+            Log.d(TAG, "completely dismiss");
+            return;
+        } else {
+            startTimer();
+        }
+
+    }
+
+    private void startTimer() {
+        if (timer == null) {
+            timer = new CountDownTimer(10000, 1000) {
+
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    // start ESM Service
+                    Intent esmServiceIntent = new Intent(TestService.this, EsmService.class);
+                    startService(esmServiceIntent);
+                    this.start();
+                }
+            };
+            timer.start();
+            Log.d(TAG, "start timer");
+        }
     }
 
     @Override
@@ -107,144 +128,64 @@ public class TestService extends Service {
         Log.d(TAG, "" + Applications.isAccessibilityServiceActive(getApplicationContext()));
         Log.d(TAG, "" + Applications.getSensorObserver());
 
-        EmotionESM esm = new EmotionESM(getApplicationContext());
-        esm.launchEmotionESM();
-//        esm.launchESM();
-
         IntentFilter filterUnlock = new IntentFilter();
         IntentFilter filterLock = new IntentFilter();
         IntentFilter filterScreenOn = new IntentFilter();
         IntentFilter filterScreenOff = new IntentFilter();
+
         filterUnlock.addAction(Screen.ACTION_AWARE_SCREEN_UNLOCKED);
         filterLock.addAction(Screen.ACTION_AWARE_SCREEN_LOCKED);
         filterScreenOn.addAction(Screen.ACTION_AWARE_SCREEN_ON);
         filterScreenOff.addAction(Screen.ACTION_AWARE_SCREEN_OFF);
 
 //        filter.addAction(Applications.ACTION_AWARE_APPLICATIONS_FOREGROUND);
+
+
         registerReceiver(phoneUnlockReceiver, filterUnlock);
         registerReceiver(phoneUnlockReceiver, filterLock);
         registerReceiver(phoneUnlockReceiver, filterScreenOn);
         registerReceiver(phoneUnlockReceiver, filterScreenOff);
 
-//        sendBroadcast(pidIntent);
-//        Log.d("PID sent ", pid+"");
-
         return START_STICKY;
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
+        super.onDestroy();
         if (phoneUnlockReceiver != null) {
             unregisterReceiver(phoneUnlockReceiver);
-
-
         }
-        super.onDestroy();
-//        Aware.setSetting(this, Aware_Preferences.STATUS_APPLICATIONS, false);
-        Aware.setSetting(this, Aware_Preferences.STATUS_SCREEN, false);
     }
-
-
-    public class EmotionESM {
-        private Context context;
-
-        public  EmotionESM(Context context) {
-            this.context = context;
-        }
-
-        private void launchEmotionESM(){
-            try {
-                ESMFactory factory = new ESMFactory();
-
-                //define ESM question
-                ESM_Likert esmLikert1 = new ESM_Likert();
-                esmLikert1.setLikertMax(5)
-                        .setLikertMaxLabel("Miserable")
-                        .setLikertMinLabel("Pleased")
-                        .setLikertStep(1)
-                        .setTitle("I currently feel")
-                        .setInstructions("")
-                        .setSubmitButton("OK");
-
-                ESM_Likert esmLikert2 = new ESM_Likert();
-                esmLikert2.setLikertMax(5)
-                        .setLikertMaxLabel("Sleepy")
-                        .setLikertMinLabel("Aroused")
-                        .setLikertStep(1)
-                        .setTitle("I currently feel")
-                        .setInstructions("")
-                        .setSubmitButton("OK");
-
-
-                //add them to the factory
-                factory.addESM(esmLikert1);
-                factory.addESM(esmLikert2);
-
-                Scheduler.Schedule scheduler = new Scheduler.Schedule("testRandom");
-                scheduler.addHour(10);
-                scheduler.addHour(20);
-                scheduler.random(6, 60);
-                scheduler.addContext(Screen.ACTION_AWARE_SCREEN_ON);
-
-                scheduler.setActionType(Scheduler.ACTION_TYPE_BROADCAST)
-                        .setActionIntentAction(ESM.ACTION_AWARE_QUEUE_ESM)
-                        .addActionExtra(ESM.EXTRA_ESM, factory.build());
-
-                Scheduler.saveSchedule(context, scheduler);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        private void launchESM(){
-            try {
-                ESMFactory factory = new ESMFactory();
-
-                //define ESM question
-                ESM_Likert esmLikert1 = new ESM_Likert();
-                esmLikert1.setLikertMax(5)
-                        .setLikertMaxLabel("Miserable")
-                        .setLikertMinLabel("Pleased")
-                        .setLikertStep(1)
-                        .setTitle("I currently feel")
-                        .setInstructions("")
-                        .setSubmitButton("OK");
-
-
-                ESM_Likert esmLikert2 = new ESM_Likert();
-                esmLikert2.setLikertMax(5)
-                        .setLikertMaxLabel("Sleepy")
-                        .setLikertMinLabel("Aroused")
-                        .setLikertStep(1)
-                        .setTitle("I currently feel")
-                        .setInstructions("")
-                        .setSubmitButton("OK");
-
-
-                //add them to the factory
-                factory.addESM(esmLikert1);
-                factory.addESM(esmLikert2);
-
-                ESM.queueESM(context, factory.build());
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-    }
-
-
 
 }
 
 
-
-
-
+//                    if(pid == 0) {
+//                        this.start();
+//                        return;
+//                    }
+//
+//                    ActivityManager activityManager = (ActivityManager) context
+//                            .getSystemService(Context.ACTIVITY_SERVICE);
+//                    List<ActivityManager.RunningAppProcessInfo> activities = activityManager.getRunningAppProcesses();
+//                    isMainActivityRunning = false;
+//                    for(ActivityManager.RunningAppProcessInfo activity:activities) {
+//                        Log.d(TAG, "inside timer:" + activity.pid);
+//                        if (activity.pid == pid) {
+//                            isMainActivityRunning = true;
+//                            break;
+//                        }
+//                    }
+//
+//                    if(!isMainActivityRunning) {
+//                        // stopAffectivaService(context);
+//                        Log.d(TAG, "stopping service");
+//                    }
+//                    else {
+//                        Log.d(TAG, "restart timer");
+//
+//                        this.start();
+//                    }
 
 // dismissed esm example
 //        private void launchESM2(){

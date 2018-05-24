@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG,serviceIntent+"");
         Log.d(TAG, TestService.class.getName());
         startService(serviceIntent);
+
+        // TODO: pass the esm service reference to this service
+
     }
 
 

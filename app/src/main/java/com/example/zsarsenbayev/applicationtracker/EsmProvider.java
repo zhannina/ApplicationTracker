@@ -19,52 +19,38 @@ import java.io.File;
 import java.util.HashMap;
 
 /**
- * Created by zsarsenbayev on 3/16/18.
+ * Created by zsarsenbayev on 5/23/18.
  */
 
-public class EmotionsProvider extends ContentProvider {
-    public static final int DATABASE_VERSION = 1;
-    public static String AUTHORITY = "com.example.zsarsenbayev.applicationtracker.emotions";
-    private static final int SENSOR_DEV = 1;
-    private static final int SENSOR_DEV_ID = 2;
+public class EsmProvider extends ContentProvider {
 
-    public static final class EmotionsTable implements BaseColumns {
-        private EmotionsTable() {
+    public static final int ESM_DATABASE_VERSION = 1;
+    public static String ESM_AUTHORITY = "com.example.zsarsenbayev.applicationtracker.selfesm";
+    private static final int ESM_SENSOR_DEV = 1;
+    private static final int ESM_SENSOR_DEV_ID = 2;
+
+    public static final class EsmTable implements BaseColumns {
+        private EsmTable() {
         }
 
-        public static final Uri CONTENT_URI = Uri.parse("content://"
-                + AUTHORITY + "/emotions");
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.contextdatareading.emotions";
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.contextdatareading.emotions";
+        public static final Uri ESM_CONTENT_URI = Uri.parse("content://"
+                + ESM_AUTHORITY + "/selfesm");
+        public static final String ESM_CONTENT_TYPE = "vnd.android.cursor.dir/vnd.contextdatareading.selfesm";
+        public static final String ESM_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.contextdatareading.selfesm";
 
-        public static final String TIMESTAMP = "timestamp";
-        public static final String DEVICE_ID = "device_id";
-        public static final String ANGER = "anger";  //anger
-        public static final String CONTEMPT = "contempt";  //contempt
-        public static final String DISGUST = "disgust"; // disgust
-        public static final String FEAR = "fear"; // fear
-        public static final String JOY = "joy"; // joy
-        public static final String SADNESS = "sadness"; // sadness
-        public static final String SURPRISE = "surprise"; // surprise
-        public static final String VALENCE = "valence"; // valence
-        public static final String SMILE = "smile"; // smile
+        public static final String ESM_TIMESTAMP = "timestamp";
+        public static final String ESM_DEVICE_ID = "device_id";
+        public static final String ESM_ANSWER = "esm_answer";
     }
 
-    public static String DATABASE_NAME = "emotions.db";
-    public static final String[] DATABASE_TABLES = { "emotions" };
+    public static String ESM_DATABASE_NAME = "selfesm.db";
+    public static final String[] ESM_DATABASE_TABLES = { "selfesm" };
+
     public static final String[] TABLES_FIELDS = {
-            EmotionsTable._ID + " integer primary key autoincrement,"
-                    + EmotionsTable.TIMESTAMP + " real default 0,"
-                    + EmotionsTable.DEVICE_ID + " text default '',"
-                    + EmotionsTable.ANGER + " real default 0,"
-                    + EmotionsTable.CONTEMPT + " real default 0,"
-                    + EmotionsTable.DISGUST + " real default 0,"
-                    + EmotionsTable.FEAR + " real default 0,"
-                    + EmotionsTable.JOY + " real default 0,"
-                    + EmotionsTable.SADNESS + " real default 0,"
-                    + EmotionsTable.SURPRISE + " real default 0,"
-                    + EmotionsTable.VALENCE + " real default 0,"
-                    + EmotionsTable.SMILE + " real default 0 "
+            EsmTable._ID + " integer primary key autoincrement,"
+                    + EsmTable.ESM_TIMESTAMP + " real default 0,"
+                    + EsmTable.ESM_DEVICE_ID + " text default '',"
+                    + EsmTable.ESM_ANSWER + " text default '' "
     };
 
     private static UriMatcher sUriMatcher = null;
@@ -74,7 +60,7 @@ public class EmotionsProvider extends ContentProvider {
 
     private boolean initializeDB() {
         if (databaseHelper == null) {
-            databaseHelper = new DatabaseHelper( getContext(), DATABASE_NAME, null, DATABASE_VERSION, DATABASE_TABLES, TABLES_FIELDS );
+            databaseHelper = new DatabaseHelper( getContext(), ESM_DATABASE_NAME, null, ESM_DATABASE_VERSION, ESM_DATABASE_TABLES, TABLES_FIELDS );
         }
         if( databaseHelper != null && ( database == null || ! database.isOpen() )) {
             database = databaseHelper.getWritableDatabase();
@@ -83,11 +69,11 @@ public class EmotionsProvider extends ContentProvider {
     }
 
     public static void resetDB(Context c ) {
-        Log.d("AWARE", "Resetting " + DATABASE_NAME + "...");
+        Log.d("AWARE", "Resetting " + ESM_DATABASE_NAME + "...");
 
-        File db = new File(DATABASE_NAME);
+        File db = new File(ESM_DATABASE_NAME);
         db.delete();
-        databaseHelper = new DatabaseHelper( c, DATABASE_NAME, null, DATABASE_VERSION, DATABASE_TABLES, TABLES_FIELDS);
+        databaseHelper = new DatabaseHelper( c, ESM_DATABASE_NAME, null, ESM_DATABASE_VERSION, ESM_DATABASE_TABLES, TABLES_FIELDS);
         if( databaseHelper != null ) {
             database = databaseHelper.getWritableDatabase();
         }
@@ -96,25 +82,16 @@ public class EmotionsProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        sUriMatcher.addURI(EmotionsProvider.AUTHORITY, DATABASE_TABLES[0],
-                SENSOR_DEV);
-        sUriMatcher.addURI(EmotionsProvider.AUTHORITY, DATABASE_TABLES[0] + "/#",
-                SENSOR_DEV_ID);
-
+        sUriMatcher.addURI(EsmProvider.ESM_AUTHORITY, ESM_DATABASE_TABLES[0],
+                ESM_SENSOR_DEV);
+        sUriMatcher.addURI(EsmProvider.ESM_AUTHORITY, ESM_DATABASE_TABLES[0] + "/#",
+                ESM_SENSOR_DEV_ID);
 
         sensorMap = new HashMap<String, String>();
-        sensorMap.put(EmotionsTable._ID, EmotionsTable._ID);
-        sensorMap.put(EmotionsTable.TIMESTAMP, EmotionsTable.TIMESTAMP);
-        sensorMap.put(EmotionsTable.DEVICE_ID, EmotionsTable.DEVICE_ID);
-        sensorMap.put(EmotionsTable.ANGER, EmotionsTable.ANGER);
-        sensorMap.put(EmotionsTable.CONTEMPT, EmotionsTable.CONTEMPT);
-        sensorMap.put(EmotionsTable.DISGUST, EmotionsTable.DISGUST);
-        sensorMap.put(EmotionsTable.FEAR, EmotionsTable.FEAR);
-        sensorMap.put(EmotionsTable.JOY, EmotionsTable.JOY);
-        sensorMap.put(EmotionsTable.SADNESS, EmotionsTable.SADNESS);
-        sensorMap.put(EmotionsTable.SURPRISE, EmotionsTable.SURPRISE);
-        sensorMap.put(EmotionsTable.VALENCE, EmotionsTable.VALENCE);
-        sensorMap.put(EmotionsTable.SMILE, EmotionsTable.SMILE);
+        sensorMap.put(EsmTable._ID, EsmTable._ID);
+        sensorMap.put(EsmTable.ESM_TIMESTAMP, EsmTable.ESM_TIMESTAMP);
+        sensorMap.put(EsmTable.ESM_DEVICE_ID, EsmTable.ESM_DEVICE_ID);
+        sensorMap.put(EsmTable.ESM_ANSWER, EsmTable.ESM_ANSWER);
 
         return true;
     }
@@ -129,8 +106,8 @@ public class EmotionsProvider extends ContentProvider {
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         switch (sUriMatcher.match(uri)) {
-            case SENSOR_DEV:
-                qb.setTables(DATABASE_TABLES[0]);
+            case ESM_SENSOR_DEV:
+                qb.setTables(ESM_DATABASE_TABLES[0]);
                 qb.setProjectionMap(sensorMap);
                 break;
             default:
@@ -154,10 +131,10 @@ public class EmotionsProvider extends ContentProvider {
     @Override
     public String getType(@NonNull Uri uri) {
         switch (sUriMatcher.match(uri)) {
-            case SENSOR_DEV:
-                return EmotionsTable.CONTENT_TYPE;
-            case SENSOR_DEV_ID:
-                return EmotionsTable.CONTENT_ITEM_TYPE;
+            case ESM_SENSOR_DEV:
+                return EsmTable.ESM_CONTENT_TYPE;
+            case ESM_SENSOR_DEV_ID:
+                return EsmTable.ESM_CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -175,15 +152,15 @@ public class EmotionsProvider extends ContentProvider {
                 initialValues) : new ContentValues();
 
         switch (sUriMatcher.match(uri)) {
-            case SENSOR_DEV:
+            case ESM_SENSOR_DEV:
                 database.beginTransaction();
-                long accel_id = database.insertWithOnConflict(DATABASE_TABLES[0],
-                        EmotionsTable.DEVICE_ID, values, SQLiteDatabase.CONFLICT_IGNORE);
+                long accel_id = database.insertWithOnConflict(ESM_DATABASE_TABLES[0],
+                        EsmTable.ESM_DEVICE_ID, values, SQLiteDatabase.CONFLICT_IGNORE);
                 database.setTransactionSuccessful();
                 database.endTransaction();
                 if (accel_id > 0) {
                     Uri accelUri = ContentUris.withAppendedId(
-                            EmotionsTable.CONTENT_URI, accel_id);
+                            EsmTable.ESM_CONTENT_URI, accel_id);
                     getContext().getContentResolver().notifyChange(accelUri, null);
                     return accelUri;
                 }
@@ -201,9 +178,9 @@ public class EmotionsProvider extends ContentProvider {
         }
         int count = 0;
         switch (sUriMatcher.match(uri)) {
-            case SENSOR_DEV:
+            case ESM_SENSOR_DEV:
                 database.beginTransaction();
-                count = database.delete(DATABASE_TABLES[0], selection,
+                count = database.delete(ESM_DATABASE_TABLES[0], selection,
                         selectionArgs);
                 database.setTransactionSuccessful();
                 database.endTransaction();
@@ -226,9 +203,9 @@ public class EmotionsProvider extends ContentProvider {
 
         int count = 0;
         switch (sUriMatcher.match(uri)) {
-            case SENSOR_DEV:
+            case ESM_SENSOR_DEV:
                 database.beginTransaction();
-                count = database.update(DATABASE_TABLES[0], values, selection,
+                count = database.update(ESM_DATABASE_TABLES[0], values, selection,
                         selectionArgs);
                 database.setTransactionSuccessful();
                 database.endTransaction();
@@ -252,14 +229,14 @@ public class EmotionsProvider extends ContentProvider {
 
         int count = 0;
         switch ( sUriMatcher.match(uri) ) {
-            case SENSOR_DEV:
+            case ESM_SENSOR_DEV:
                 database.beginTransaction();
                 for (ContentValues v : values) {
                     long id;
                     try {
-                        id = database.insertOrThrow( DATABASE_TABLES[0], EmotionsTable.DEVICE_ID, v );
+                        id = database.insertOrThrow( ESM_DATABASE_TABLES[0], EsmTable.ESM_DEVICE_ID, v );
                     } catch ( SQLException e ) {
-                        id = database.replace( DATABASE_TABLES[0], EmotionsTable.DEVICE_ID, v );
+                        id = database.replace( ESM_DATABASE_TABLES[0], EsmTable.ESM_DEVICE_ID, v );
                     }
                     if( id <= 0 ) {
                         Log.w("Light.TAG", "Failed to insert/replace row into " + uri);
