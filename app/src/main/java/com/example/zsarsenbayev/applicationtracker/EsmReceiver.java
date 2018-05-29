@@ -22,7 +22,7 @@ public class EsmReceiver extends BroadcastReceiver {
             Log.d(TAG, "Screen unlocked");
 
             Intent i = new Intent(context.getApplicationContext(), EsmActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(i);
         }
     }

@@ -38,36 +38,40 @@ public class TestService extends Service {
     public void onCreate() {
         super.onCreate();
         phoneUnlockReceiver = new PhoneUnlockReceiver();
-        calendar = Calendar.getInstance();
 
-        if (calendar.get(Calendar.HOUR_OF_DAY) < 10 || calendar.get(Calendar.HOUR_OF_DAY) > 20){
-            Log.d(TAG, "completely dismiss");
-            return;
-        } else {
-            startTimer();
-        }
+//        Log.d(TAG, "" + calendar.get(Calendar.HOUR_OF_DAY));
+
+        startTimer();
 
     }
 
     private void startTimer() {
-        if (timer == null) {
-            timer = new CountDownTimer(60*60*1000, 1000) {
+        calendar = Calendar.getInstance();
+        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        Log.d(TAG, "" + calendar.get(Calendar.HOUR_OF_DAY));
+        if (hourOfDay > 10 && hourOfDay < 20) {
+            if (timer == null) {
+                timer = new CountDownTimer(60*60*1000, 1000) {
+                    //
 
-                @Override
-                public void onTick(long millisUntilFinished) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
 
-                }
+                    }
 
-                @Override
-                public void onFinish() {
-                    // start ESM Service
-                    Intent esmServiceIntent = new Intent(TestService.this, EsmService.class);
-                    startService(esmServiceIntent);
-                    this.start();
-                }
-            };
-            timer.start();
-            Log.d(TAG, "start timer");
+                    @Override
+                    public void onFinish() {
+                        // start ESM Service
+                        Intent esmServiceIntent = new Intent(TestService.this, EsmService.class);
+                        startService(esmServiceIntent);
+                        this.start();
+                    }
+                };
+                timer.start();
+                Log.d(TAG, "start timer");
+            }
+        } else {
+            Log.d(TAG, "completely dismiss");
         }
     }
 
