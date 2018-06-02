@@ -9,9 +9,11 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,10 +32,12 @@ public class TestService extends Service {
     private PhoneUnlockReceiver phoneUnlockReceiver;
     private CountDownTimer timer = null;
     private Calendar calendar;
+    private Util util;
 
     public TestService() {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onCreate() {
         super.onCreate();
@@ -41,35 +45,43 @@ public class TestService extends Service {
 
 //        Log.d(TAG, "" + calendar.get(Calendar.HOUR_OF_DAY));
 
+        util = new Util();
         startTimer();
 
     }
 
+
+    // starts the ESM timer
+    // should put job scheduler here
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void startTimer() {
         calendar = Calendar.getInstance();
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         Log.d(TAG, "" + calendar.get(Calendar.HOUR_OF_DAY));
         if (hourOfDay > 10 && hourOfDay < 20) {
-            if (timer == null) {
-                timer = new CountDownTimer(60*60*1000, 1000) {
-                    //
-
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        // start ESM Service
-                        Intent esmServiceIntent = new Intent(TestService.this, EsmService.class);
-                        startService(esmServiceIntent);
-                        this.start();
-                    }
-                };
-                timer.start();
-                Log.d(TAG, "start timer");
-            }
+            util.scheduleJob(getApplicationContext());
+//            if (timer == null) {
+//                timer = new CountDownTimer(60*60*1000, 1000) {
+//                    //
+//
+//                    @Override
+//                    public void onTick(long millisUntilFinished) {
+//
+//                    }
+//
+//                    @RequiresApi(api = Build.VERSION_CODES.M)
+//                    @Override
+//                    public void onFinish() {
+//                        // start ESM Service
+////                        Intent esmServiceIntent = new Intent(TestService.this, EsmService.class);
+////                        startService(esmServiceIntent);
+////                        this.start();
+//                        util.scheduleJob(getApplicationContext());
+//                    }
+//                };
+//                timer.start();
+//                Log.d(TAG, "start timer");
+//            }
         } else {
             Log.d(TAG, "completely dismiss");
         }
