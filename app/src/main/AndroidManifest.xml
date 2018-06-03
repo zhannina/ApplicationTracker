@@ -26,7 +26,7 @@
     <uses-permission android:name="android.permission.BATTERY_STATS" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permisssion.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permisssion.RECEIVE_BOOT_COMPLETED" />
 
     <permission
         android:name="com.aware.READ_CONTEXT_DATA"
@@ -96,7 +96,7 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".EsmActivity"></activity>
+        <activity android:name=".EsmActivity" />
 
         <service
             android:name=".EsmService"
@@ -105,13 +105,14 @@
         <service
             android:name=".TestJobService"
             android:label="Word service"
-            android:permission="android.permission.BIND_JOB_SERVICE"></service>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <receiver android:name=".MyStartServiceReceiver" >
+        <receiver android:name=".MyStartServiceReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

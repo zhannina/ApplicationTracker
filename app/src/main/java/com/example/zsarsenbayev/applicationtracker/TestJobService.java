@@ -10,7 +10,7 @@ import android.support.annotation.RequiresApi;
 
 public class TestJobService extends JobService {
 
-    private static final String TAG = "SyncService";
+//    private static final String TAG = "SyncService";
 
     public TestJobService() {
     }

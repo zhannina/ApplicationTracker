@@ -18,8 +18,8 @@ public class Util {
     public static void scheduleJob(Context context) {
         ComponentName serviceComponent = new ComponentName(context, TestJobService.class);
         JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
-        builder.setMinimumLatency(60 * 15 * 1000); // wait at least
-        builder.setOverrideDeadline(60 * 60 * 1000); // maximum delay
+        builder.setMinimumLatency(60 *  60 * 1000); // wait at least
+        builder.setOverrideDeadline(60 * 90 * 1000); // maximum delay
         builder.setPersisted(true);
         //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
         //builder.setRequiresDeviceIdle(true); // device should be idle
