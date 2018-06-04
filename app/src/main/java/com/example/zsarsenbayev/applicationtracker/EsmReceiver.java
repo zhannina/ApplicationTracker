@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.aware.Screen;
 
+import java.util.Calendar;
+
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
@@ -18,9 +20,12 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class EsmReceiver extends BroadcastReceiver {
     private static final String TAG = "ESMReceiver";
+    private Calendar calendar;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        calendar = Calendar.getInstance();
+        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
 
         if (intent.getAction().equals(Screen.ACTION_AWARE_SCREEN_UNLOCKED)) {
             // TODO: launch esm activity
@@ -29,7 +34,13 @@ public class EsmReceiver extends BroadcastReceiver {
 //            Intent i = new Intent(context.getApplicationContext(), EsmActivity.class);
 //            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //            context.startActivity(i);
-            createNotification(context);
+            Log.d(TAG, "" + calendar.get(Calendar.HOUR_OF_DAY));
+            if (hourOfDay > 10 && hourOfDay < 20) {
+                createNotification(context);
+            } else {
+                Log.d(TAG, "completely dismiss");
+            }
+
         }
     }
 
