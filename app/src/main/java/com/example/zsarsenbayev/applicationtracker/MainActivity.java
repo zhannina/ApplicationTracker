@@ -1,6 +1,11 @@
 package com.example.zsarsenbayev.applicationtracker;
 
 import android.*;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -11,9 +16,12 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.IBinder;
 import android.os.StrictMode;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,20 +36,24 @@ import com.aware.providers.Applications_Provider;
 import com.aware.utils.Aware_Sensor;
 import com.backendless.Backendless;
 
+import junit.framework.Test;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button serviceBtn;
     public static final String TAG = "Zhanna";
     public static String message = "Please enable accessibility service";
+    public static final String CHANNEL_ID = "exampleTestService";
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     public final static int REQUEST_CODE = 200;
-    Intent serviceIntent;
+    TestService testServiceRef;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        testServiceRef = new TestService();
 
         checkDrawOverlayPermission();
         checkPermissions();
@@ -50,15 +62,20 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
+        createNotificationChannel();
+
+//        final Intent intentTest = new Intent("com.example.zsarsenbayev.testservice");
+
         serviceBtn = findViewById(R.id.serviceBtn);
         serviceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startTestService();
+                Intent testIntent = new Intent(getApplicationContext(), TestService.class);
+                startService(testIntent);
+                Log.d("AAAAAA", "Button Clicked");
             }
         });
-        serviceIntent = new Intent(this, TestService.class);
-
     }
 
 
@@ -115,6 +132,16 @@ public class MainActivity extends AppCompatActivity {
             if (Settings.canDrawOverlays(this)) {
                 // continue here - permission was granted
             }
+        }
+    }
+
+    private void createNotificationChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel notificationChannel = new NotificationChannel(
+                    CHANNEL_ID, "Service Channel", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(notificationChannel);
+
         }
     }
 }

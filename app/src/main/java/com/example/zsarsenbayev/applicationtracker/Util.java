@@ -19,9 +19,11 @@ public class Util {
     public static void scheduleJob(Context context) {
         ComponentName serviceComponent = new ComponentName(context, TestJobService.class);
         JobInfo.Builder builder = new JobInfo.Builder(0, serviceComponent);
-        builder.setMinimumLatency(/*60 * **/ 10 * 1000); // wait at least
-        builder.setOverrideDeadline(/*60 * **/ 40 * 1000); // maximum delay
-        builder.setPersisted(true);
+        builder.setMinimumLatency(60 * 60 * 1000); // wait at least
+        builder.setOverrideDeadline(60 * 80 * 1000); // maximum delay
+//        builder.setPeriodic(/*60 * **/30 * 1000);
+        builder.setPersisted(true); // keeps the job alive if the device is being rebooted
+
         //builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED); // require unmetered network
         //builder.setRequiresDeviceIdle(true); // device should be idle
         //builder.setRequiresCharging(false); // we don't care if the device is charging or not

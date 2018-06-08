@@ -79,7 +79,13 @@
         <service
             android:name=".TestService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true" >
+
+            <intent-filter >
+                <action android:name="com.example.zsarsenbayev.testservice" />
+            </intent-filter>
+        </service>
+
         <service
             android:name=".AffectivaService"
             android:enabled="true"
