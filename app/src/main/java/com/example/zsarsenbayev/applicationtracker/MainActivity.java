@@ -36,7 +36,7 @@ import com.aware.providers.Applications_Provider;
 import com.aware.utils.Aware_Sensor;
 import com.backendless.Backendless;
 
-import junit.framework.Test;
+//import junit.framework.Test; //BE careful! We removed this cause it couldn't be found with targetSDK 28!
 
 public class MainActivity extends AppCompatActivity {
 
@@ -118,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
             /** request permission via start activity for result */
+
+
+
             startActivityForResult(intent, REQUEST_CODE);
         }
     }
